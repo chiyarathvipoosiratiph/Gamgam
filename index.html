@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ตารางติวหมอ 🩺💗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink: #ff6f9c;
+    --pink-light: #ffe3ec;
+    --pink-dark: #e85585;
+    --green: #4fcf8f;
+    --green-light: #e3fbf0;
+    --green-dark: #33a873;
+    --yellow: #ffd166;
+    --yellow-light: #fff6df;
+    --text: #4a3b45;
+    --muted: #9b8a94;
+    --bg: #fff8fa;
+    --card: #ffffff;
+    --shadow: 0 6px 16px rgba(255, 111, 156, 0.15);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Baloo 2', sans-serif;
+    background: linear-gradient(180deg, #fff0f5 0%, #f3fff8 100%);
+    color:var(--text);
+    padding-bottom:60px;
+  }
+  header{
+    position:sticky; top:0; z-index:10;
+    background: linear-gradient(120deg, var(--pink), #ff9bbf);
+    color:white;
+    padding:20px 16px 16px;
+    border-radius: 0 0 28px 28px;
+    box-shadow: var(--shadow);
+    text-align:center;
+  }
+  header h1{
+    margin:0 0 4px;
+    font-size:1.5rem;
+    font-weight:800;
+  }
+  header p{
+    margin:0;
+    font-size:0.85rem;
+    opacity:0.95;
+  }
+  .progress-wrap{
+    max-width:480px;
+    margin:14px auto 0;
+    background:rgba(255,255,255,0.35);
+    border-radius:20px;
+    padding:10px 14px;
+  }
+  .progress-bar-bg{
+    background:rgba(255,255,255,0.4);
+    border-radius:20px;
+    height:14px;
+    overflow:hidden;
+    margin-top:6px;
+  }
+  .progress-bar-fill{
+    background: var(--green);
+    height:100%;
+    border-radius:20px;
+    transition: width 0.4s ease;
+  }
+  .progress-label{
+    font-size:0.8rem;
+    font-weight:600;
+    display:flex;
+    justify-content:space-between;
+  }
+  main{
+    max-width:480px;
+    margin:18px auto;
+    padding:0 14px;
+  }
+  .day-card{
+    background:var(--card);
+    border-radius:22px;
+    box-shadow: var(--shadow);
+    margin-bottom:18px;
+    overflow:hidden;
+    border: 2px solid var(--pink-light);
+  }
+  .day-card.mock{
+    border-color: var(--yellow);
+  }
+  .day-card.done{
+    border-color: var(--green);
+  }
+  .day-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 16px;
+    background: var(--pink-light);
+    cursor:pointer;
+    user-select:none;
+  }
+  .day-card.mock .day-head{ background: var(--yellow-light); }
+  .day-card.done .day-head{ background: var(--green-light); }
+  .day-title{
+    display:flex;
+    flex-direction:column;
+  }
+  .day-title .dname{ font-weight:800; font-size:1.05rem; }
+  .day-title .ddate{ font-size:0.78rem; color:var(--muted); }
+  .day-badge{
+    font-size:0.7rem;
+    font-weight:700;
+    background:var(--pink);
+    color:white;
+    padding:3px 10px;
+    border-radius:12px;
+  }
+  .day-card.mock .day-badge{ background:#f2a900; }
+  .day-card.done .day-badge{ background:var(--green-dark); }
+  .day-count{
+    font-size:0.8rem;
+    font-weight:700;
+    color:var(--pink-dark);
+    margin-right:8px;
+  }
+  .day-card.mock .day-count{ color:#b9790a; }
+  .day-card.done .day-count{ color:var(--green-dark); }
+  .chevron{
+    transition: transform 0.25s ease;
+    font-size:0.9rem;
+    color: var(--muted);
+  }
+  .day-card.open .chevron{ transform: rotate(180deg); }
+  .day-body{
+    max-height:0;
+    overflow:hidden;
+    transition: max-height 0.35s ease;
+  }
+  .day-card.open .day-body{ max-height:900px; }
+  .session{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 16px;
+    border-top:1px dashed #ffe0ea;
+  }
+  .day-card.mock .session{ border-top-color:#ffedbb; }
+  .session .time{
+    font-size:0.72rem;
+    color:var(--muted);
+    width:78px;
+    flex-shrink:0;
+    font-weight:600;
+  }
+  .session .info{
+    flex:1;
+  }
+  .session .subj{
+    font-weight:700;
+    font-size:0.92rem;
+  }
+  .session .detail{
+    font-size:0.76rem;
+    color:var(--muted);
+    margin-top:1px;
+  }
+  .checkbox{
+    width:26px; height:26px;
+    border-radius:50%;
+    border:2px solid var(--pink);
+    flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    background:white;
+    transition: all 0.15s ease;
+    font-size:0.9rem;
+  }
+  .checkbox.checked{
+    background: var(--green);
+    border-color: var(--green-dark);
+    color:white;
+  }
+  .meal-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 16px;
+    font-size:0.75rem;
+    color:var(--muted);
+    background:#fffaf5;
+  }
+  .meal-row span.icon{ font-size:0.9rem; }
+  footer{
+    text-align:center;
+    font-size:0.75rem;
+    color:var(--muted);
+    padding:16px;
+  }
+  .reset-btn{
+    display:block;
+    margin:10px auto 0;
+    background:none;
+    border:none;
+    color:var(--pink-dark);
+    font-family:inherit;
+    font-size:0.75rem;
+    text-decoration:underline;
+    cursor:pointer;
+  }
+  .celebrate{
+    text-align:center;
+    font-size:0.8rem;
+    font-weight:700;
+    color:var(--green-dark);
+    padding:6px 16px 12px;
+  }
+  .mini-stats{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-top:10px;
+    flex-wrap:wrap;
+  }
+  .mini-stat{
+    background:rgba(255,255,255,0.3);
+    border-radius:14px;
+    padding:5px 12px;
+    font-size:0.75rem;
+    font-weight:700;
+  }
+  .note-wrap{
+    padding:10px 16px 14px;
+    border-top:1px dashed #ffe0ea;
+  }
+  .note-wrap label{
+    font-size:0.72rem;
+    color:var(--muted);
+    font-weight:700;
+    display:block;
+    margin-bottom:4px;
+  }
+  .note-wrap textarea{
+    width:100%;
+    min-height:50px;
+    border:1.5px solid var(--pink-light);
+    border-radius:12px;
+    padding:8px 10px;
+    font-family:inherit;
+    font-size:0.82rem;
+    resize:vertical;
+    color:var(--text);
+    background:#fffafc;
+  }
+  .note-wrap textarea:focus{
+    outline:none;
+    border-color:var(--pink);
+  }
+  .mock-score-wrap{
+    padding:10px 16px 4px;
+    border-top:1px dashed #ffedbb;
+  }
+  .mock-score-wrap .msw-title{
+    font-size:0.78rem;
+    font-weight:700;
+    color:#b9790a;
+    margin-bottom:8px;
+  }
+  .mock-score-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .mock-score-grid label{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:0.78rem;
+    font-weight:700;
+    background:#fffaf0;
+    border-radius:10px;
+    padding:6px 10px;
+    gap:6px;
+  }
+  .mock-score-grid input{
+    width:52px;
+    border:1.5px solid #ffe6a8;
+    border-radius:8px;
+    padding:3px 6px;
+    font-family:inherit;
+    font-size:0.85rem;
+    text-align:center;
+  }
+  .mock-score-grid input:focus{ outline:none; border-color:#f2a900; }
+  .chart-section{
+    max-width:480px;
+    margin:0 auto 30px;
+    padding:0 14px;
+  }
+  .chart-title{
+    font-weight:800;
+    font-size:1rem;
+    margin-bottom:10px;
+    color:var(--pink-dark);
+    text-align:center;
+  }
+  .chart-empty{
+    text-align:center;
+    font-size:0.8rem;
+    color:var(--muted);
+    background:white;
+    border-radius:16px;
+    padding:20px;
+    box-shadow:var(--shadow);
+  }
+  .chart-box{
+    background:white;
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    padding:14px;
+  }
+  .chart-legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin-top:8px;
+  }
+  .chart-legend .item{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-size:0.72rem;
+    font-weight:700;
+  }
+  .chart-legend .dot{
+    width:10px; height:10px; border-radius:50%;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ตารางติวหมอ 🩺💗</h1>
+  <p>15-30 กันยายน 2569 · เป้าหมาย 80/100 ทุกวิชา</p>
+  <div class="mini-stats">
+    <div class="mini-stat" id="countdownStat">⏳ กำลังคำนวณ...</div>
+    <div class="mini-stat" id="streakStat">🔥 ต่อเนื่อง 0 วัน</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>ความคืบหน้ารวม</span>
+      <span id="overallText">0/0</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="overallFill" style="width:0%"></div>
+    </div>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<section id="chartSection" class="chart-section">
+  <div class="chart-title">📊 คะแนน Mock Exam</div>
+  <div id="chartArea"></div>
+</section>
+
+<footer>
+  ติ๊กเมื่ออ่าน/ติวแต่ละคาบเสร็จแล้วนะคะ 🌸 ข้อมูลจะถูกจำไว้ในเครื่องนี้
+  <button class="reset-btn" id="resetBtn">รีเซ็ตทั้งหมด</button>
+</footer>
+
+<script>
+const MEAL_BREAKFAST = "08:00–08:30 🍳 ทานข้าวเช้าที่บ้าน";
+const MEAL_LUNCH = "15:00–16:00 🍚 ทานข้าวเที่ยง";
+const TIMES = ["06:45–08:00","08:30–10:00","10:15–11:45","12:00–13:30","13:45–15:00","16:00–17:30"];
+
+const days = [
+  { day:"อังคาร", date:"15 ก.ย.", isoDate:"2026-09-15", sessions:[
+    {s:"ฟิสิกส์", d:"หน่วยวัด+เวกเตอร์ (1)"},
+    {s:"เคมี", d:"โครงสร้างอะตอม (1)"},
+    {s:"ชีวะ", d:"เซลล์ (โครงสร้างเบื้องต้น)"},
+    {s:"คณิต", d:"เซต (นิยาม/สัญลักษณ์)"},
+    {s:"ไทย", d:""},
+    {s:"คณิต (ทบทวน)", d:""},
+  ]},
+  { day:"พุธ", date:"16 ก.ย.", isoDate:"2026-09-16", sessions:[
+    {s:"เคมี", d:"โครงสร้างอะตอม (2)"},
+    {s:"ชีวะ", d:"เซลล์ (ออร์แกเนลล์)"},
+    {s:"คณิต", d:"เซต (เวนน์-ออยเลอร์)"},
+    {s:"ฟิสิกส์", d:"เวกเตอร์ (2)"},
+    {s:"อังกฤษ", d:""},
+    {s:"คณิต (ทบทวน)", d:""},
+  ]},
+  { day:"พฤหัสบดี", date:"17 ก.ย.", isoDate:"2026-09-17", sessions:[
+    {s:"ชีวะ", d:"เซลล์ (การลำเลียงสาร)"},
+    {s:"คณิต", d:"ตรรกศาสตร์ (ประพจน์)"},
+    {s:"ฟิสิกส์", d:"การเคลื่อนที่แนวตรง (1)"},
+    {s:"เคมี", d:"ตารางธาตุ (1)"},
+    {s:"สังคม", d:""},
+    {s:"คณิต (ทบทวน)", d:""},
+  ]},
+  { day:"ศุกร์", date:"18 ก.ย.", isoDate:"2026-09-18", sessions:[
+    {s:"คณิต", d:"ตรรกศาสตร์ (ตัวเชื่อม)"},
+    {s:"เคมี", d:"ตารางธาตุ (2)"},
+    {s:"ฟิสิกส์", d:"การเคลื่อนที่แนวตรง (2)"},
+    {s:"ชีวะ", d:"เซลล์ (สรุปรวม)"},
+    {s:"ไทย", d:""},
+    {s:"คณิต (ทบทวน)", d:""},
+  ]},
+  { day:"เสาร์", date:"19 ก.ย.", isoDate:"2026-09-19", sessions:[
+    {s:"ฟิสิกส์", d:"ทบทวนรวม + โจทย์"},
+    {s:"ชีวะ", d:"ทบทวนรวม + โจทย์"},
+    {s:"เคมี", d:"ทบทวนรวม + โจทย์"},
+    {s:"คณิต", d:"ทบทวนรวม + โจทย์"},
+    {s:"อังกฤษ", d:""},
+    {s:"คณิต (ทบทวน)", d:""},
+  ]},
+  { day:"อาทิตย์", date:"20 ก.ย.", isoDate:"2026-09-20", mock:true, sessions:[
+    {s:"Mock Exam", d:"คณิต / ฟิสิกส์ / เคมี / ชีวะ"},
+    {s:"Mock Exam", d:"คณิต / ฟิสิกส์ / เคมี / ชีวะ"},
+    {s:"Mock Exam", d:"คณิต / ฟิสิกส์ / เคมี / ชีวะ"},
+    {s:"Mock Exam", d:"คณิต / ฟิสิกส์ / เคมี / ชีวะ"},
+    {s:"สังคม (ทบทวน)", d:""},
+    {s:"เฉลยข้อสอบ", d:""},
+  ]},
+  { day:"จันทร์", date:"21 ก.ย.", isoDate:"2026-09-21", sessions:[
+    {s:"ฟิสิกส์", d:""},{s:"เคมี", d:""},{s:"ชีวะ", d:""},{s:"คณิต", d:""},
+    {s:"ไทย", d:""},{s:"คณิต (ทบทวน)", d:""},
+  ]},
+  { day:"อังคาร", date:"22 ก.ย.", isoDate:"2026-09-22", sessions:[
+    {s:"เคมี", d:""},{s:"ชีวะ", d:""},{s:"คณิต", d:""},{s:"ฟิสิกส์", d:""},
+    {s:"อังกฤษ", d:""},{s:"คณิต (ทบทวน)", d:""},
+  ]},
+  { day:"พุธ", date:"23 ก.ย.", isoDate:"2026-09-23", sessions:[
+    {s:"ชีวะ", d:""},{s:"คณิต", d:""},{s:"ฟิสิกส์", d:""},{s:"เคมี", d:""},
+    {s:"สังคม", d:""},{s:"คณิต (ทบทวน)", d:""},
+  ]},
+  { day:"พฤหัสบดี", date:"24 ก.ย.", isoDate:"2026-09-24", sessions:[
+    {s:"คณิต", d:""},{s:"เคมี", d:""},{s:"ฟิสิกส์", d:""},{s:"ชีวะ", d:""},
+    {s:"ไทย", d:""},{s:"คณิต (ทบทวน)", d:""},
+  ]},
+  { day:"ศุกร์", date:"25 ก.ย.", isoDate:"2026-09-25", sessions:[
+    {s:"ฟิสิกส์", d:""},{s:"ชีวะ", d:""},{s:"เคมี", d:""},{s:"คณิต", d:""},
+    {s:"อังกฤษ", d:""},{s:"คณิต (ทบทวน)", d:""},
+  ]},
+  { day:"เสาร์", date:"26 ก.ย.", isoDate:"2026-09-26", sessions:[
+    {s:"เคมี", d:""},{s:"ฟิสิกส์", d:""},{s:"ชีวะ", d:""},{s:"คณิต", d:""},
+    {s:"สังคม", d:""},{s:"คณิต (ทบทวน)", d:""},
+  ]},
+  { day:"อาทิตย์", date:"27 ก.ย.", isoDate:"2026-09-27", mock:true, sessions:[
+    {s:"Mock Exam", d:"คณิต / ฟิสิกส์ / เคมี / ชีวะ"},
+    {s:"Mock Exam", d:"คณิต / ฟิสิกส์ / เคมี / ชีวะ"},
+    {s:"Mock Exam", d:"คณิต / ฟิสิกส์ / เคมี / ชีวะ"},
+    {s:"Mock Exam", d:"คณิต / ฟิสิกส์ / เคมี / ชีวะ"},
+    {s:"ไทย (ทบทวน)", d:""},
+    {s:"เฉลยข้อสอบ", d:""},
+  ]},
+  { day:"จันทร์", date:"28 ก.ย.", isoDate:"2026-09-28", sessions:[
+    {s:"ฟิสิกส์", d:""},{s:"เคมี", d:""},{s:"ชีวะ", d:""},{s:"คณิต", d:""},
+    {s:"อังกฤษ", d:""},{s:"คณิต (ทบทวน)", d:""},
+  ]},
+  { day:"อังคาร", date:"29 ก.ย.", isoDate:"2026-09-29", sessions:[
+    {s:"เคมี", d:""},{s:"ชีวะ", d:""},{s:"คณิต", d:""},{s:"ฟิสิกส์", d:""},
+    {s:"สังคม", d:""},{s:"คณิต (ทบทวน)", d:""},
+  ]},
+  { day:"พุธ", date:"30 ก.ย.", isoDate:"2026-09-30", sessions:[
+    {s:"ชีวะ", d:""},{s:"คณิต", d:""},{s:"ฟิสิกส์", d:""},{s:"เคมี", d:""},
+    {s:"ไทย", d:""},{s:"คณิต (ทบทวน)", d:""},
+  ]},
+];
+
+const EXAM_DATES = [
+  { name:"TGAT", date:"2027-01-30" },
+  { name:"TPAT", date:"2027-02-13" },
+  { name:"9 วิชาสามัญ วันที่ 1 (ฟิสิกส์/ชีวะ/ไทย/สังคม)", date:"2027-03-13" },
+  { name:"9 วิชาสามัญ วันที่ 2 (เคมี/คณิต/อังกฤษ)", date:"2027-03-14" },
+];
+
+const MOCK_SUBJECTS = [
+  { key:"math", label:"คณิต", color:"#e85585" },
+  { key:"phys", label:"ฟิสิกส์", color:"#4fcf8f" },
+  { key:"chem", label:"เคมี", color:"#f2a900" },
+  { key:"bio", label:"ชีวะ", color:"#3aa9a0" },
+];
+
+const STORAGE_KEY = "study_tracker_sep69_v1";
+let state = {};
+try {
+  state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+} catch(e) { state = {}; }
+
+function saveState(){
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function keyFor(dateIdx, sessionIdx){
+  return dateIdx + "_" + sessionIdx;
+}
+
+const app = document.getElementById("app");
+
+function render(){
+  app.innerHTML = "";
+  let totalDone = 0, totalAll = 0;
+
+  days.forEach((day, di) => {
+    const card = document.createElement("div");
+    card.className = "day-card" + (day.mock ? " mock" : "");
+
+    const doneCount = day.sessions.filter((_, si) => state[keyFor(di, si)]).length;
+    totalDone += doneCount;
+    totalAll += day.sessions.length;
+    if (doneCount === day.sessions.length) card.classList.add("done");
+
+    const head = document.createElement("div");
+    head.className = "day-head";
+    head.innerHTML = `
+      <div class="day-title">
+        <span class="dname">${day.day} ${day.mock ? "🌟" : ""}</span>
+        <span class="ddate">${day.date}</span>
+      </div>
+      <div style="display:flex; align-items:center;">
+        <span class="day-count">${doneCount}/${day.sessions.length}</span>
+        <span class="chevron">▾</span>
+      </div>
+    `;
+    head.addEventListener("click", () => {
+      card.classList.toggle("open");
+    });
+
+    const body = document.createElement("div");
+    body.className = "day-body";
+
+    day.sessions.forEach((sess, si) => {
+      // insert breakfast divider before period index 1 (after period 0)
+      if (si === 1) {
+        const meal = document.createElement("div");
+        meal.className = "meal-row";
+        meal.innerHTML = `<span class="icon">🍳</span> ${MEAL_BREAKFAST}`;
+        body.appendChild(meal);
+      }
+      if (si === 5) {
+        const meal = document.createElement("div");
+        meal.className = "meal-row";
+        meal.innerHTML = `<span class="icon">🍚</span> ${MEAL_LUNCH}`;
+        body.appendChild(meal);
+      }
+
+      const row = document.createElement("div");
+      row.className = "session";
+      const checked = !!state[keyFor(di, si)];
+      row.innerHTML = `
+        <div class="time">${TIMES[si]}</div>
+        <div class="info">
+          <div class="subj">${sess.s}</div>
+          ${sess.d ? `<div class="detail">${sess.d}</div>` : ""}
+        </div>
+        <div class="checkbox ${checked ? "checked" : ""}" data-di="${di}" data-si="${si}">
+          ${checked ? "✓" : ""}
+        </div>
+      `;
+      body.appendChild(row);
+    });
+
+    if (day.mock) {
+      const scoreWrap = document.createElement("div");
+      scoreWrap.className = "mock-score-wrap";
+      const grid = MOCK_SUBJECTS.map(sub => {
+        const val = state["mockscore_" + day.isoDate + "_" + sub.key];
+        return `<label>${sub.label}
+          <input type="number" min="0" max="100" placeholder="-" 
+            data-iso="${day.isoDate}" data-subj="${sub.key}" 
+            class="mock-score-input" value="${val !== undefined ? val : ""}">
+        </label>`;
+      }).join("");
+      scoreWrap.innerHTML = `<div class="msw-title">📊 คะแนนที่ทำได้ (เต็ม 100)</div>
+        <div class="mock-score-grid">${grid}</div>`;
+      body.appendChild(scoreWrap);
+    }
+
+    const noteWrap = document.createElement("div");
+    noteWrap.className = "note-wrap";
+    const existingNote = state["note_" + di] || "";
+    noteWrap.innerHTML = `<label>📝 จุดที่ผิด / สิ่งที่ต้องทบทวน</label>
+      <textarea class="note-input" data-di="${di}" placeholder="เช่น วันนี้งงเรื่องเวกเตอร์ ต้องทวนอีกรอบ...">${existingNote}</textarea>`;
+    body.appendChild(noteWrap);
+
+    if (doneCount === day.sessions.length) {
+      const cel = document.createElement("div");
+      cel.className = "celebrate";
+      cel.textContent = "🎉 อ่านครบวันนี้แล้ว เก่งมาก!";
+      body.appendChild(cel);
+    }
+
+    card.appendChild(head);
+    card.appendChild(body);
+    app.appendChild(card);
+  });
+
+  app.querySelectorAll(".checkbox").forEach(box => {
+    box.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const di = box.dataset.di, si = box.dataset.si;
+      const k = keyFor(di, si);
+      state[k] = !state[k];
+      saveState();
+      render();
+    });
+  });
+
+  app.querySelectorAll(".note-input").forEach(ta => {
+    ta.addEventListener("click", (e) => e.stopPropagation());
+    ta.addEventListener("input", () => {
+      state["note_" + ta.dataset.di] = ta.value;
+      saveState();
+    });
+  });
+
+  app.querySelectorAll(".mock-score-input").forEach(inp => {
+    inp.addEventListener("click", (e) => e.stopPropagation());
+    inp.addEventListener("input", () => {
+      const v = inp.value === "" ? undefined : Math.max(0, Math.min(100, Number(inp.value)));
+      if (v === undefined) {
+        delete state["mockscore_" + inp.dataset.iso + "_" + inp.dataset.subj];
+      } else {
+        state["mockscore_" + inp.dataset.iso + "_" + inp.dataset.subj] = v;
+      }
+      saveState();
+      renderChart();
+    });
+  });
+
+  document.getElementById("overallText").textContent = totalDone + "/" + totalAll;
+  document.getElementById("overallFill").style.width = (totalAll ? (totalDone/totalAll*100) : 0) + "%";
+
+  updateStreak();
+  renderChart();
+}
+
+function todayISO(){
+  const d = new Date();
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,"0"), day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+
+function updateCountdown(){
+  const today = todayISO();
+  const next = EXAM_DATES.find(e => e.date >= today);
+  const el = document.getElementById("countdownStat");
+  if (!next) { el.textContent = "🎉 สอบครบทุกสนามแล้ว"; return; }
+  const diffDays = Math.ceil((new Date(next.date) - new Date(today)) / 86400000);
+  el.textContent = diffDays === 0
+    ? `⏳ วันนี้สอบ ${next.name}!`
+    : `⏳ อีก ${diffDays} วัน ถึง ${next.name}`;
+}
+
+function updateStreak(){
+  const today = todayISO();
+  let lastIdx = -1;
+  for (let i = 0; i < days.length; i++) {
+    if (days[i].isoDate <= today) lastIdx = i;
+  }
+  const streakEl = document.getElementById("streakStat");
+  if (lastIdx === -1) { streakEl.textContent = "🔥 ต่อเนื่อง 0 วัน"; return; }
+
+  const isDayDone = (i) => days[i].sessions.every((_, si) => !!state[keyFor(i, si)]);
+
+  let start = lastIdx;
+  if (days[lastIdx].isoDate === today && !isDayDone(lastIdx)) start = lastIdx - 1;
+
+  let streak = 0;
+  for (let i = start; i >= 0; i--) {
+    if (isDayDone(i)) streak++; else break;
+  }
+  streakEl.textContent = `🔥 ต่อเนื่อง ${streak} วัน`;
+}
+
+function renderChart(){
+  const area = document.getElementById("chartArea");
+  const points = days.filter(d => d.mock).map(d => {
+    const scores = {};
+    MOCK_SUBJECTS.forEach(sub => {
+      const v = state["mockscore_" + d.isoDate + "_" + sub.key];
+      if (v !== undefined) scores[sub.key] = v;
+    });
+    return { date: d.date, isoDate: d.isoDate, scores };
+  }).filter(p => Object.keys(p.scores).length > 0);
+
+  if (points.length === 0) {
+    area.innerHTML = `<div class="chart-empty">กรอกคะแนนหลังทำ Mock Exam แต่ละครั้ง แล้วกราฟจะขึ้นตรงนี้ค่ะ 🌱</div>`;
+    return;
+  }
+
+  const W = 300, H = 160, padL = 28, padR = 10, padT = 10, padB = 24;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const xStep = points.length > 1 ? plotW / (points.length - 1) : 0;
+  const yFor = (score) => padT + plotH - (score / 100) * plotH;
+  const xFor = (i) => padL + xStep * i;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:400px; display:block; margin:0 auto;">`;
+
+  // gridlines + y labels (0,40,80 target line dashed)
+  [0, 20, 40, 60, 80, 100].forEach(v => {
+    const y = yFor(v);
+    svg += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#f2e6ea" stroke-width="1"/>`;
+    svg += `<text x="2" y="${y+3}" font-size="7" fill="#9b8a94">${v}</text>`;
+  });
+  // target 80 line highlighted
+  const y80 = yFor(80);
+  svg += `<line x1="${padL}" y1="${y80}" x2="${W-padR}" y2="${y80}" stroke="#4fcf8f" stroke-width="1.2" stroke-dasharray="4,3"/>`;
+
+  MOCK_SUBJECTS.forEach(sub => {
+    const vals = points.map((p, i) => p.scores[sub.key] !== undefined ? { x: xFor(i), y: yFor(p.scores[sub.key]) } : null);
+    const valid = vals.filter(v => v);
+    if (valid.length === 0) return;
+    let path = "";
+    vals.forEach((v, i) => {
+      if (!v) return;
+      path += (path === "" ? "M" : "L") + v.x.toFixed(1) + "," + v.y.toFixed(1) + " ";
+    });
+    svg += `<path d="${path}" fill="none" stroke="${sub.color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`;
+    vals.forEach(v => {
+      if (!v) return;
+      svg += `<circle cx="${v.x}" cy="${v.y}" r="3.2" fill="${sub.color}"/>`;
+    });
+  });
+
+  // x labels
+  points.forEach((p, i) => {
+    svg += `<text x="${xFor(i)}" y="${H-6}" font-size="7" fill="#9b8a94" text-anchor="middle">${p.date}</text>`;
+  });
+
+  svg += `</svg>`;
+
+  const legend = MOCK_SUBJECTS.map(sub =>
+    `<div class="item"><span class="dot" style="background:${sub.color}"></span>${sub.label}</div>`
+  ).join("");
+
+  area.innerHTML = `<div class="chart-box">${svg}<div class="chart-legend">${legend}</div></div>`;
+}
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (confirm("ลบข้อมูลติ๊กถูกทั้งหมดเลยไหมคะ?")) {
+    state = {};
+    saveState();
+    render();
+  }
+});
+
+render();
+updateCountdown();
+
+// open today's card automatically if it matches (best-effort, based on device date)
+</script>
+
+</body>
+</html>
