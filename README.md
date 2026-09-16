@@ -13,7 +13,15 @@
 ## วิธีเอาขึ้น GitHub Pages (ฟรี)
 
 1. สร้าง repository ใหม่บน GitHub เช่นชื่อ `study-tracker`
-2. อัปโหลดไฟล์ **index.html**, **avatar.jpg**, และ **favicon.png** เข้าไปใน repo ทั้งหมด (ลากไฟล์วางในหน้าเว็บ GitHub ได้เลย หรือ `git add . && git commit -m "add tracker" && git push`) — ต้องอยู่โฟลเดอร์เดียวกันกับ index.html ไม่งั้นรูปมาสคอตจะไม่ขึ้น
+2. อัปโหลดไฟล์ทั้งหมดนี้เข้าไปใน repo พร้อมกัน (ต้องอยู่โฟลเดอร์เดียวกัน ไม่ต้องสร้างซับโฟลเดอร์):
+   - `index.html`
+   - `avatar.jpg`
+   - `favicon.png`
+   - `icon-180.png`, `icon-192.png`, `icon-512.png`
+   - `manifest.json`
+   - `README.md` (ไม่จำเป็นต้องอัปก็ได้ ไม่กระทบการทำงานของเว็บ)
+   
+   ลากไฟล์วางในหน้าเว็บ GitHub ได้เลย หรือ `git add . && git commit -m "add tracker" && git push`
 3. ไปที่ **Settings → Pages**
 4. ในหัวข้อ **Source** เลือก branch `main` และโฟลเดอร์ `/root` แล้วกด **Save**
 5. รอ 1-2 นาที จะได้ลิงก์ประมาณ `https://<ชื่อผู้ใช้>.github.io/study-tracker/`
